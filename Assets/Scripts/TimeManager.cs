@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
@@ -7,8 +8,9 @@ public class TimeManager : MonoBehaviour
     public int roundCount = 1;
     public int currentRound = 1;
     public int frameIndex;
-    public GameObject[] playerList;
-    public GameObject[] itemList;
+    public PlayerController[] playerList;
+    public ItemController[] itemList;
+    public BoxController[] boxList;
     public Sprite[] numbers;
     public float nextCountDown = -1;
 
@@ -23,6 +25,9 @@ public class TimeManager : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioPlay = GetComponent<AudioSource>();
+        playerList = FindObjectsOfType<PlayerController>();
+        itemList = FindObjectsOfType<ItemController>();
+        boxList = FindObjectsOfType<BoxController>();
         restart();
     }
 
@@ -54,13 +59,17 @@ public class TimeManager : MonoBehaviour
     {
         frameIndex = 0;
         loose = false;
-        foreach (GameObject player in playerList)
+        foreach (PlayerController player in playerList)
         {
-            player.GetComponent<PlayerController>().Respawn();
+            player.Respawn();
         }
-        foreach (GameObject item in itemList)
+        foreach (ItemController item in itemList)
         {
-            item.GetComponent<ItemController>().Respawn();
+            item.Respawn();
+        }
+        foreach (BoxController box in boxList)
+        {
+            box.Respawn();
         }
     }
 
