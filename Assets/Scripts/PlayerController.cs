@@ -19,6 +19,37 @@ public class PlayerController : MonoBehaviour
     public bool dead;
     public List<ControlRecord> recording = new List<ControlRecord>();
 
+    // items
+    public enum Items
+    {
+        None,
+        pistol
+    }
+
+    int totalItems = Enum.GetNames(typeof(Items)).Length;
+    public GameObject[] playerItemsArray;
+    public GameObject itemHolder;
+    public Items CurrentItem = Items.None;
+
+    void setItem(Items item)
+    {
+        switch (item)
+        {
+            case Items.None:
+                for (int i = 0; i < totalItems; i++)
+                {
+                    playerItemsArray[i] = itemHolder.transform.GetChild(i).gameObject;
+                    playerItemsArray[i].SetActive(false);
+                }
+                goto case Items.pistol;
+            case Items.pistol:
+                playerItemsArray[0].SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,7 +59,13 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-
+        totalItems = Enum.GetNames(typeof(Items)).Length;
+        playerItemsArray = new GameObject[totalItems];
+        for(int i = 0; i < totalItems; i++)
+        {
+            playerItemsArray[i] = itemHolder.transform.GetChild(i).gameObject;
+            playerItemsArray[i].SetActive(false);
+        }
     }
 
     void Update()
@@ -100,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag =="Coin" && !timeManager.loose && !dead)
+        if (collision.gameObject.tag == "Coin" && !timeManager.loose && !dead)
         {
             if (playerIndex == timeManager.currentRound)
             {
